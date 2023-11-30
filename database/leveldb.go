@@ -4,10 +4,14 @@ import (
     "github.com/syndtr/goleveldb/leveldb"
 )
 
-var DB *leveldb.DB
+var DB leveldb.DB
 
-func InitDB(path string) {    
-    db, err := leveldb.OpenFile(path, nil)    
+func GetDB()leveldb.DB {
+    return DB
+}
+
+func InitDB(path string) {
+    db, err := leveldb.OpenFile(path, nil)
     if err != nil {
         panic(err)
     }
