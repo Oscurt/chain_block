@@ -6,20 +6,23 @@ import (
     "os"
     "strings"
     "time"
-
     "github.com/joho/godotenv"
 )
 
-const SeedNodesEnvVar = "LIBP2P_SEEDNODES"
+const SeedNodesEnvVar = "LIBP2P_SEED_NODES"
 
 // ChooseRandomNodeFromEnv selecciona un nodo aleatorio de los nodos semilla en el archivo .env, excluyendo el nodo especificado si se proporciona.
 func ChooseRandomNodeFromEnv(excludeNodeID string) (string, error) {
-    err := godotenv.Load()
+
+    err := godotenv.Load(".env")
     if err != nil {
         return "", fmt.Errorf("error al cargar el archivo .env: %v", err)
     }
 
     seedNodes := os.Getenv(SeedNodesEnvVar)
+
+
+
     nodes := strings.Split(seedNodes, ",")
     if len(nodes) == 0 {
         return "", fmt.Errorf("no se encontraron nodos semilla")
@@ -28,7 +31,7 @@ func ChooseRandomNodeFromEnv(excludeNodeID string) (string, error) {
     // Filtrar el nodo excluido si se especifica
     if excludeNodeID != "" {
         var filteredNodes []string
-        for , node := range nodes {
+        for _ , node := range nodes {
             if !strings.HasSuffix(node, excludeNodeID) {
                 filteredNodes = append(filteredNodes, node)
             }

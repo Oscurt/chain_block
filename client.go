@@ -33,6 +33,9 @@ func ConnectToRandomNode() (host.Host, *peer.AddrInfo, bool, error) {
     }
 
     // Convertir la dirección del nodo remoto a multiaddr
+
+    log.Println("Conectando al nodo:", randomNode)
+
     peerAddr, err := multiaddr.NewMultiaddr(randomNode)
     if err != nil {
         return nil, nil, false, fmt.Errorf("dirección multiaddr inválida: %v", err)

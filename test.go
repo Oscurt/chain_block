@@ -6,7 +6,7 @@ import (
 	"github.com/syndtr/goleveldb/leveldb"
 )
 
-const MasterDBPath = "data/12D3KooWPtCk6o3jWQ7aaesr1Sj7c5TgLCcG7huHCGFHiJhbzrE5"
+const MasterDBPath = "data/master"
 
 func main() {
 	masterDB, err := leveldb.OpenFile(MasterDBPath, nil)
