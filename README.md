@@ -41,6 +41,7 @@ Para interactuar con la red blockchain, se deben seguir los siguientes pasos:
 go run node.go
 ```
 
+![](img/API.png)
 ![](img/CLIENTE.png)
 
 - Ejecución del Cliente: Para interactuar con la red, se debe ejecutar client.go. Es necesario que exista al menos un nodo en ejecución; de lo contrario, el cliente terminará su ejecución. El cliente se conectará aleatoriamente con uno de los nodos activos para interactuar con la red. Cada acción realizada se refleja en toda la red a través de la sincronización automática. Para ejecutar el cliente, use el comando:
@@ -50,6 +51,8 @@ go run client.go
 ```
 
 ### Pruebas de funcionamiento
+
+Nota algunas de estas pruebas son con un menu interactivo que esta comentado, pues actualmente se pueden realizar las peticiones mediante una api-rest, se puede ver en el historial de commits la version con menu.
 
 #### Bloque genesis:
 

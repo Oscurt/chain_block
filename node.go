@@ -103,6 +103,7 @@ func main() {
     network.SetupSyncHandler(h)
     network.SetupGetBalanceHandler(h)
     network.SetupSendHandler(h)
+    network.SetupGetTransHandler(h)
 
     go func() {
         <-sigChan

@@ -6,6 +6,9 @@ import (
     "os"
     "strings"
     "time"
+    "crypto/sha256"
+    "encoding/hex"
+    "strconv"
     "github.com/joho/godotenv"
 )
 
@@ -46,4 +49,15 @@ func ChooseRandomNodeFromEnv(excludeNodeID string) (string, error) {
     rand.Seed(time.Now().UnixNano())
     randomNode := nodes[rand.Intn(len(nodes))]
     return randomNode, nil
+}
+
+func GenerateTransactionHash(transaction Transaction) string {
+    // Concatenar los campos de la transacción para formar una cadena única
+    data := transaction.Sender + transaction.Recipient + fmt.Sprintf("%f", transaction.Ammount) + transaction.Signature + strconv.FormatInt(transaction.TimeStamp, 10)
+
+    // Calcular el hash SHA-256 de la cadena
+    hash := sha256.Sum256([]byte(data))
+
+    // Convertir el hash a una cadena hexadecimal
+    return hex.EncodeToString(hash[:])
 }

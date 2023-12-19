@@ -43,6 +43,9 @@ func CreateGenesisBlock() (common.Block, float64) {
             Signature: "OSCURT",
             TimeStamp: time.Now().Unix(),
         }
+
+        genesisTransaction.Hash = common.GenerateTransactionHash(genesisTransaction)
+
         transactions = append(transactions, genesisTransaction)
     }
 

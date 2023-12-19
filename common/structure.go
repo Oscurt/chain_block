@@ -24,6 +24,7 @@ type Transaction struct {
     Ammount     float64
     Signature   string
     TimeStamp   int64
+    Hash        string
 }
 
 type User struct {

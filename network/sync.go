@@ -179,6 +179,81 @@ func SetupSyncHandler(h host.Host) {
     })
 }
 
+func SetupGetTransHandler(h host.Host) {
+    h.SetStreamHandler("/get-trans", func(s network.Stream) {
+        defer s.Close()
+
+        log.Println("Solicitud de obtener transacción recibida.")
+        
+        // Leer el hash de la transacción del cliente
+        buf := bufio.NewReader(s)
+        hash, err := buf.ReadString('\n')
+        if err != nil {
+            fmt.Println("Error al leer el hash:", err)
+            return
+        }
+        hash = strings.TrimSpace(hash)
+
+        // Buscar la transacción en la base de datos
+        transaction, err := getTransactionByHash("data/"+h.ID().String(), hash)
+        if err != nil {
+            fmt.Println("Error al obtener la transacción:", err)
+            return
+        }
+
+        // Enviar la transacción al cliente
+        transactionData, err := json.Marshal(transaction)
+        if err != nil {
+            fmt.Println("Error al codificar la transacción:", err)
+            return
+        }
+
+        _, err = s.Write(append(transactionData, '\n'))
+        if err != nil {
+            fmt.Println("Error al enviar la transacción:", err)
+            return
+        }
+
+        log.Println("Transacción enviada con éxito.")
+    })
+}
+
+
+func getTransactionByHash(dbPath, hash string) (*common.Transaction, error) {
+    db, err := leveldb.OpenFile(dbPath, nil)
+    if err != nil {
+        return nil, fmt.Errorf("error al abrir la base de datos: %v", err)
+    }
+    defer db.Close()
+
+    iter := db.NewIterator(nil, nil)
+    for iter.Next() {
+        // Ignorar la clave "USER"
+        if string(iter.Key()) == "USER" {
+            continue
+        }
+
+        var block common.Block
+        err := json.Unmarshal(iter.Value(), &block)
+        if err != nil {
+            continue // o manejar el error
+        }
+
+        for _, tx := range block.Transactions {
+            if tx.Hash == hash {
+                return &tx, nil
+            }
+        }
+    }
+    iter.Release()
+    if err := iter.Error(); err != nil {
+        return nil, err
+    }
+
+    return nil, fmt.Errorf("transacción no encontrada")
+}
+
+
 func SetupGetBalanceHandler(h host.Host) {
     h.SetStreamHandler("/get-balance", func(s network.Stream) {
         defer s.Close()
