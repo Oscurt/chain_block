@@ -32,11 +32,16 @@ Implementa la red utilizando la biblioteca libp2p y el protocolo Kademlia DHT. E
 
 Para interactuar con la red blockchain, se deben seguir los siguientes pasos:
 
+![](img/NODOS.png)
+
 - Ejecución de Nodos: Se pueden ejecutar varios nodos, con un límite de 20 nodos semilla. Estos nodos se conectarán y sincronizarán automáticamente. La primera creación de un nodo en una red nueva generará la base de datos maestra, y cada nodo mantendrá su propia base de datos local. Para ejecutar un nodo, use el comando:
+
 
 ```bash
 go run node.go
 ```
+
+![](img/CLIENTE.png)
 
 - Ejecución del Cliente: Para interactuar con la red, se debe ejecutar client.go. Es necesario que exista al menos un nodo en ejecución; de lo contrario, el cliente terminará su ejecución. El cliente se conectará aleatoriamente con uno de los nodos activos para interactuar con la red. Cada acción realizada se refleja en toda la red a través de la sincronización automática. Para ejecutar el cliente, use el comando:
 
