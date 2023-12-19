@@ -6,33 +6,31 @@ import (
     "crypto/sha256"
     "golang.org/x/crypto/ripemd160"
     "fmt"
+    "log"
     "github.com/syndtr/goleveldb/leveldb"
+    "github.com/libp2p/go-libp2p/core/host"
     "encoding/json"
+    "blockchain/common"
+    "blockchain/database"
 )
 
-type User struct {
-    PrivateKey         *bip32.Key
-    PublicKey          *bip32.Key
-    Address            string
-    Balance            float64
-}
 func generateMnemonic() string {
-    entropy,  := bip39.NewEntropy(128)
-    mnemonic,  := bip39.NewMnemonic(entropy)
+    entropy, _ := bip39.NewEntropy(128)
+    mnemonic, _ := bip39.NewMnemonic(entropy)
     return mnemonic
 }
 
-func derivePrivateKey(mnemonic string) bip32.Key {
+func derivePrivateKey(mnemonic string) *bip32.Key {
     seed := bip39.NewSeed(mnemonic, "")
     masterKey, _ := bip32.NewMasterKey(seed)
     return masterKey
 }
 
-func derivePublicKey(privateKeybip32.Key) bip32.Key {
+func derivePublicKey(privateKey *bip32.Key) *bip32.Key {
     return privateKey.PublicKey()
 }
 
-func deriveAddress(publicKeybip32.Key) string {
+func deriveAddress(publicKey *bip32.Key) string {
 
     sha256 := sha256.New()
     sha256.Write(publicKey.Key)
@@ -47,49 +45,86 @@ func deriveAddress(publicKeybip32.Key) string {
     return address
 }
 
-func NewUser(db leveldb.DB)User {
+func NewUser(db string, h host.Host, master float64) (common.User, error){
 
     mnemonic := generateMnemonic()
     privateKey := derivePrivateKey(mnemonic)
     publicKey := derivePublicKey(privateKey)
     address := deriveAddress(publicKey)
 
-    user := &User{
+    user := &common.User{
         PrivateKey: privateKey,
         PublicKey: publicKey,
         Address: address,
-        Balance: 0,
+        Balance: master,
     }
 
-    SaveUser(db, user)
+    log.Println("Usuario generado:", user)
+    err := SaveUser(db, user)
+    if err != nil {
+        return common.User{}, err
+    }
 
-    return user
+    log.Println("Usuario guardado con éxito en la base de datos.")
+
+    return *user, nil
 }
 
-func SaveUser(db leveldb.DB, userUser) error {
-    userData := &User{
-        PrivateKey: nil,
-        PublicKey: user.PublicKey,
-        Address: user.Address,
-        Balance: user.Balance,
+func updateUserList(db *leveldb.DB, user *common.User) error {
+    data, err := db.Get([]byte("USER"), nil)
+    if err != nil && err != leveldb.ErrNotFound {
+        return err
     }
-    userDataBytes, err := json.Marshal(userData)
+
+    var users []*common.User
+    if err != leveldb.ErrNotFound {
+        err = json.Unmarshal(data, &users)
+        if err != nil {
+            return err
+        }
+    }
+
+    users = append(users, user)
+    updatedData, err := json.Marshal(users)
     if err != nil {
         return err
     }
-    err = db.Put([]byte(user.Address), userDataBytes, nil)
+
+    return db.Put([]byte("USER"), updatedData, nil)
+}
+
+func SaveUser(dbPath string, user *common.User) error {
+    // Abrir la base de datos maestra
+    masterDB, err := leveldb.OpenFile("data/master", nil)
+    if err != nil {
+        log.Fatalf("Failed to initialize master DB: %v", err)
+    }
+    defer masterDB.Close()
+
+    // Leer y actualizar la lista de usuarios en la base de datos maestra
+    err = updateUserList(masterDB, user)
     if err != nil {
         return err
     }
+
+    masterDB.Close()
+
+    // Sincronizar la base de datos local con la maestra
+    err = database.SyncNewEntriesToMasterDB(dbPath)
+    if err != nil {
+        log.Printf("Error al sincronizar con la base de datos maestra: %v", err)
+        return err
+    }
+
     return nil
 }
 
-func LoadUser(db leveldb.DB, address string) (User, error) {
+func LoadUser(db *leveldb.DB, address string) (*common.User, error) {
     userDataBytes, err := db.Get([]byte(address), nil)
     if err != nil {
         return nil, err
     }
-    var userData User
+    var userData common.User
     err = json.Unmarshal(userDataBytes, &userData)
     if err != nil {
         return nil, err
