@@ -6,22 +6,40 @@
 - David Pazan
 - Sebastian Gonzalez
 
-## Funcionalidad
+## Descripción
 
-El siguiente repositorio consta de la elaboracion de un sistema de blockchain, en primera instancia solo se modela la capa de datos, para ello se utilizo golang y leveldb.
+Este repositorio contiene la implementación de un sistema de blockchain. El proyecto se estructura en varios módulos, cada uno con una funcionalidad específica para el funcionamiento integral del sistema de blockchain.
+
+## Modulos
 
 ### database
 
-En este se encuentra la conexion asi como los metodos get, put, delete y tambien la inicializacion y el termino de la conexion a la misma.
+Este módulo gestiona la conexión con la base de datos y proporciona métodos fundamentales como get, put, delete, así como la inicialización y cierre de la conexión. Se utiliza LevelDB para el almacenamiento de datos.
 
-### src
+### common
 
-En este se encuentra el core del proyecto, en donde se encuentra el bloque, las transacciones y los metodos de generacion de ellos, como el calculo de hash, guardar y cargar bloques.
+Contiene las estructuras de datos utilizadas en el proyecto, así como funciones auxiliares que facilitan el desarrollo y la operatividad del sistema.
 
-### main
+### core
 
-En este se encuentra el menu interactivo para lograr probar las funcionalidades, este mismo tiene una forma descriptiva de cada metodo.
+Aquí se encuentra la lógica central del funcionamiento de bloques, transacciones y usuarios. Este módulo gestiona la creación de nuevos elementos y coordina la comunicación con el módulo de red para la sincronización con la blockchain.
+
+### network
+
+Implementa la red utilizando la biblioteca libp2p y el protocolo Kademlia DHT. Este módulo maneja la conexión entre nodos a través de nodos semilla y realiza la sincronización de datos en la red. Se utilizan variables de entorno para gestionar dinámicamente los nodos disponibles.
 
 ### Ejecutar
 
-Para ejecutar este mismo se recomienda usar docker que generar el archivo binario de golang para la posterior ejecucion del mismo, aun asi se puede ejecutar de forma casera, utilizando los comandos de go run o go build.
+Para interactuar con la red blockchain, se deben seguir los siguientes pasos:
+
+- Ejecución de Nodos: Se pueden ejecutar varios nodos, con un límite de 20 nodos semilla. Estos nodos se conectarán y sincronizarán automáticamente. La primera creación de un nodo en una red nueva generará la base de datos maestra, y cada nodo mantendrá su propia base de datos local. Para ejecutar un nodo, use el comando:
+
+```bash
+go run node.go
+```
+
+- Ejecución del Cliente: Para interactuar con la red, se debe ejecutar client.go. Es necesario que exista al menos un nodo en ejecución; de lo contrario, el cliente terminará su ejecución. El cliente se conectará aleatoriamente con uno de los nodos activos para interactuar con la red. Cada acción realizada se refleja en toda la red a través de la sincronización automática. Para ejecutar el cliente, use el comando:
+
+```bash
+go run client.go
+```
