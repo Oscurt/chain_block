@@ -4,7 +4,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN go mod tidy \
+RUN go mod init blockchain \
+&& go mod tidy \
 && go build -o main .
 
 FROM alpine:3.18.4
