@@ -50,3 +50,33 @@ go run client.go
 
 ![](img/GENESIS1.png)
 ![](img/GENESIS2.png)
+
+#### Crear cuenta nueva
+
+![](img/CUENTANEW1.png)
+![](img/CUENTANEW2.png)
+![](img/CUENTANEW3.png)
+
+#### Envio saldo
+
+![](img/SALDO1.png)
+![](img/SALDO2.png)
+![](img/SALDO3.png)
+
+#### Saldo insuficiente
+
+![](img/FONDOS1.png)
+![](img/FONDOS2.png)
+![](img/FONDOS3.png)
+
+#### Saldo a cuenta inexistente
+
+![](img/FAKE1.png)
+![](img/FAKE2.png)
+![](img/FAKE3.png)
+
+#### Consulta de saldo
+
+![](img/GETSALDO1.png)
+![](img/GETSALDO2.png)
+![](img/GETSALDO3.png)
