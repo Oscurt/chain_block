@@ -1,9 +1,10 @@
 module blockchain
 
-go 1.21.1
+go 1.21.3
 
 require (
-	github.com/libp2p/go-libp2p v0.32.1
+	github.com/joho/godotenv v1.5.1
+	github.com/libp2p/go-libp2p v0.32.2
 	github.com/multiformats/go-multiaddr v0.12.0
 	github.com/syndtr/goleveldb v1.0.0
 	github.com/tyler-smith/go-bip32 v1.0.0
@@ -77,7 +78,7 @@ require (
 	github.com/prometheus/procfs v0.8.0 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/quic-go/qtls-go1-20 v0.3.4 // indirect
-	github.com/quic-go/quic-go v0.39.3 // indirect
+	github.com/quic-go/quic-go v0.39.4 // indirect
 	github.com/quic-go/webtransport-go v0.6.0 // indirect
 	github.com/raulk/go-watchdog v1.3.0 // indirect
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
@@ -91,6 +92,7 @@ require (
 	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/sync v0.4.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect
+	golang.org/x/term v0.15.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/tools v0.14.0 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect

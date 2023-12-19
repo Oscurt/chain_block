@@ -1,0 +1,6 @@
+version: '3.8'
+services:
+  nodo:
+    build: .
+    volumes:
+    - ./.env:/app/.env
