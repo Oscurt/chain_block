@@ -48,6 +48,5 @@ go run client.go
 
 #### Bloque genesis:
 
-<span>![</span><span>VISTA NODO GENERACION</span><span>]</span><span>(</span><span>https://github.com/Oscurt/chain_block/blob/main/img/GENESIS1.png</span><span>)</span>
-
-<span>![</span><span>VISTA BASE DE DATOS GENERACION</span><span>]</span><span>(</span><span>https://github.com/Oscurt/chain_block/blob/main/img/GENESIS2.png</span><span>)</span>
+![](img/GENESIS1.png)
+![](img/GENESIS2.png)
